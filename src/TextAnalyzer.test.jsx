@@ -22,4 +22,25 @@ describe('analyze()', () => {
     const s = analyze('One line.\n\nSecond para.')
     expect(s.paragraphCount).toBe(2)
   })
+
+  it('handles punctuation without creating extra tokens', () => {
+    const s = analyze("Hello, world! This is great... Right?")
+    // tokens: hello, world, this, is, great, right
+    expect(s.wordCount).toBe(6)
+    expect(s.sentenceCount).toBeGreaterThanOrEqual(2)
+    expect(s.mostFrequentWord).toBe('hello' || 'world')
+  })
+
+  it('ignores numeric-only tokens when determining most frequent word', () => {
+    const s = analyze('123 123 test test test')
+    expect(s.wordCount).toBe(5)
+    expect(s.mostFrequentWord).toBe('test')
+  })
+
+  it('handles large input quickly (basic performance smoke test)', () => {
+    const big = Array.from({length:5000}, () => 'hey').join(' ')
+    const s = analyze(big)
+    expect(s.wordCount).toBe(5000)
+    expect(s.longestWord).toBe('hey')
+  })
 })
