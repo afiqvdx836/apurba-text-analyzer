@@ -67,6 +67,7 @@ function longestWord(words){
   return best || null;
 }
 
+const SENTIMENT_THRESHOLD = 1;
 function sentimentScore(words){
   if (!words.length) return {label: "neutral", score: 0};
   let score = 0;
@@ -74,7 +75,7 @@ function sentimentScore(words){
     if (POSITIVE.has(w)) score += 1;
     if (NEGATIVE.has(w)) score -= 1;
   }
-  const label = score > 1 ? "positive" : score < -1 ? "negative" : "neutral";
+  const label = score > SENTIMENT_THRESHOLD ? "positive" : score < -SENTIMENT_THRESHOLD ? "negative" : "neutral";
   return {label, score};
 }
 
